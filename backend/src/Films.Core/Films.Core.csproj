@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="FilmManagement\ValueObjects\" />
+    <Folder Include="Shared\IDs\" />
+  </ItemGroup>
+
 </Project>
