@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="FilmManagement\ValueObjects\" />
-    <Folder Include="Shared\IDs\" />
+    <PackageReference Include="CSharpFunctionalExtensions" Version="3.4.3" />
   </ItemGroup>
 
 </Project>
