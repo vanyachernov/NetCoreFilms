@@ -6,7 +6,7 @@ using Films.Core.Shared.IDs;
 namespace Films.Core.FilmManagement;
 
 /// <summary>
-/// Represents a film entity (also it's aggregate root)
+/// Represents a film entity (also it's aggregate root).
 /// </summary>
 public class Film : Shared.Entity<FilmId>
 {
@@ -30,11 +30,34 @@ public class Film : Shared.Entity<FilmId>
         Description = description;
     }
 
+    /// <summary>
+    /// Gets a film title.
+    /// </summary>
     public Title Title { get; private set; } = default!;
+    
+    /// <summary>
+    /// Gets a film genre.
+    /// </summary>
     public Genre Genre { get; private set; } = default!;
+    
+    /// <summary>
+    /// Gets a film director.
+    /// </summary>
     public Director Director { get; private set; } = default!;
+    
+    /// <summary>
+    /// Gets a film release year.
+    /// </summary>
     public ReleaseYear ReleaseYear { get; private set; } = default!;
+    
+    /// <summary>
+    /// Gets a film rating.
+    /// </summary>
     public Rating Rating { get; private set; } = default!;
+    
+    /// <summary>
+    /// Gets a film description.
+    /// </summary>
     public Description Description { get; private set; } = default!;
     
     public static Result<Film, Error> Create(

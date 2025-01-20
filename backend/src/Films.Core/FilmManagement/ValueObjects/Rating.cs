@@ -3,6 +3,9 @@ using Films.Core.Shared;
 
 namespace Films.Core.FilmManagement.ValueObjects;
 
+/// <summary>
+/// Represents a rating value-object.
+/// </summary>
 public record Rating
 {
     private Rating(int value) => Value = value;

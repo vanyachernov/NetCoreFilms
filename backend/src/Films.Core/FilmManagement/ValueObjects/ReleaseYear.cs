@@ -3,6 +3,9 @@ using Films.Core.Shared;
 
 namespace Films.Core.FilmManagement.ValueObjects;
 
+/// <summary>
+/// Represents a release year value-object.
+/// </summary>
 public record ReleaseYear
 {
     private ReleaseYear(int value) => Value = value;

@@ -3,6 +3,9 @@ using Films.Core.Shared;
 
 namespace Films.Core.FilmManagement.ValueObjects;
 
+/// <summary>
+/// Represents a director value-object.
+/// </summary>
 public record Director
 {
     private Director(string value) => Value = value;
