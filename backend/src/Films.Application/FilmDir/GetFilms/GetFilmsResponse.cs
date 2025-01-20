@@ -11,3 +11,8 @@ public class GetFilmsResponse
     public RatingDto Rating { get; set; }
     public ReleaseYearDto Release { get; set; }
 }
+
+public class GetFilmsWrapperResponse
+{
+    public IEnumerable<GetFilmsResponse> Films { get; set; }
+}

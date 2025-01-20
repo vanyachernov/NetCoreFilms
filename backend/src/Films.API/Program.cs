@@ -1,4 +1,5 @@
 using Films.API;
+using Films.Application;
 using Films.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
     
     builder.Services
         .AddApi()
+        .AddApplication()
         .AddInfrastructure();
 }
 

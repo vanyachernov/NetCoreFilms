@@ -9,7 +9,6 @@ namespace Films.Application.FilmDir.AddFilm;
 public class AddFilmHandler(IFilmsRepository filmsRepository)
 {
     public async Task<Result<Guid, Error>> Handle(
-        Guid filmId,
         AddFilmRequest request,
         CancellationToken cancellationToken = default)
     {

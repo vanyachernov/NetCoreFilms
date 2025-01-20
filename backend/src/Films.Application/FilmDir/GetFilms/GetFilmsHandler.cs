@@ -6,7 +6,7 @@ namespace Films.Application.FilmDir.GetFilms;
 
 public class GetFilmsHandler(IFilmsRepository filmsRepository)
 {
-    public async Task<Result<IEnumerable<GetFilmsResponse>, Error>> Handle(
+    public async Task<Result<GetFilmsWrapperResponse, Error>> Handle(
         CancellationToken cancellationToken = default)
     {
         var filmsResult = await filmsRepository.Get(cancellationToken);
@@ -27,6 +27,9 @@ public class GetFilmsHandler(IFilmsRepository filmsRepository)
                 Release = film.Release
             });
 
-        return response.ToList();
+        return new GetFilmsWrapperResponse
+        {
+            Films = response.ToList()
+        };
     }
 }
