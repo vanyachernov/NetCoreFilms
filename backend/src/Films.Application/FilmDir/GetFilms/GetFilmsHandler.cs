@@ -20,13 +20,11 @@ public class GetFilmsHandler(IFilmsRepository filmsRepository)
             .Select(film => new GetFilmsResponse
             {
                 Id = film.Id,
-                FullName = new FullNameDto(
-                    film.Title.Value,
-                    film.Description.Value),
-                Genre = new GenreDto(film.Genre.Value),
-                Director = new DirectorDto(film.Director.Value),
-                Rating = new RatingDto(film.Rating.Value),
-                Release = new ReleaseYearDto(film.ReleaseYear.Value)
+                FullName = film.FullName,
+                Genre = film.Genre,
+                Director = film.Director,
+                Rating = film.Rating,
+                Release = film.Release
             });
 
         return response.ToList();
