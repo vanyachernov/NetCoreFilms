@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Films.Core\Films.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="FilmDir\" />
+  </ItemGroup>
+
 </Project>

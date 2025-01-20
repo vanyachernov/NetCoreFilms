@@ -10,9 +10,12 @@ public record ReleaseYear
 
     public static Result<ReleaseYear> Create(int releaseYear)
     {
-        if (releaseYear <= 0)
+        var currentYear = DateTime.UtcNow.Year;
+        
+        if (releaseYear < 1888 || releaseYear > currentYear)
         {
-            return Result.Failure<ReleaseYear>("Release year is invalid!");
+            return Result.Failure<ReleaseYear>(
+                $"Release year {releaseYear} is invalid! Must be between 1888 and {currentYear}.");
         }
 
         return new ReleaseYear(releaseYear);
