@@ -23,4 +23,8 @@ public interface IFilmsRepository
     Task<Result<Guid, Error>> Delete(
         Guid filmId,
         CancellationToken cancellationToken = default);
+    
+    Task<Result<bool, Error>> IsExists(
+        Guid templateId, 
+        CancellationToken cancellationToken = default);
 }
