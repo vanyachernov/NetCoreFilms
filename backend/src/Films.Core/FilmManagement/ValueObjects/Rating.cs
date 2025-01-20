@@ -11,7 +11,7 @@ public record Rating
 
     public static Result<Rating, Error> Create(int rating)
     {
-        if (rating < 0 || rating > 10)
+        if (rating < 1 || rating > 10)
         {
             return Errors.General.ValueIsInvalid("Rating is invalid!");
         }
