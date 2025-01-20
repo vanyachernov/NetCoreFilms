@@ -7,6 +7,7 @@ public record FilmId
     private FilmId(Guid value) => Value = value;
     
     public static FilmId Create(Guid id) => new(id);
+    public static FilmId NewId => new(Guid.NewGuid());
 
     public static implicit operator Guid(FilmId id) => id.Value;
 }
