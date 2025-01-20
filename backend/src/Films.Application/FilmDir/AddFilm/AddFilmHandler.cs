@@ -1,13 +1,14 @@
 using CSharpFunctionalExtensions;
 using Films.Core.FilmManagement;
 using Films.Core.FilmManagement.ValueObjects;
+using Films.Core.Shared;
 using Films.Core.Shared.IDs;
 
 namespace Films.Application.FilmDir.AddFilm;
 
 public class AddFilmHandler(IFilmsRepository filmsRepository)
 {
-    public async Task<Result<Guid>> Handle(
+    public async Task<Result<Guid, Error>> Handle(
         Guid filmId,
         AddFilmRequest request,
         CancellationToken cancellationToken = default)
@@ -16,42 +17,42 @@ public class AddFilmHandler(IFilmsRepository filmsRepository)
         
         if (filmTitle.IsFailure)
         {
-            return Result.Failure<Guid>("Film Title is invalid!");
+            return Errors.General.ValueIsInvalid("Title");
         }
 
         var filmGenre = Genre.Create(request.Genre.Title);
         
         if (filmGenre.IsFailure)
         {
-            return Result.Failure<Guid>("Film Genre is invalid!");
+            return Errors.General.ValueIsInvalid("Genre");
         }
 
         var filmDirector = Director.Create(request.Director.FullName);
         
         if (filmDirector.IsFailure)
         {
-            return Result.Failure<Guid>("Film Director is invalid!");
+            return Errors.General.ValueIsInvalid("Director");
         }
 
         var filmReleaseYear = ReleaseYear.Create(request.Release.Year);
         
         if (filmReleaseYear.IsFailure)
         {
-            return Result.Failure<Guid>("Film Release Year is invalid!");
+            return Errors.General.ValueIsInvalid("Release Year");
         }
         
         var filmRating = Rating.Create(request.Rating.Points);
         
         if (filmRating.IsFailure)
         {
-            return Result.Failure<Guid>("Film Rating is invalid!");
+            return Errors.General.ValueIsInvalid("Rating");
         }
         
         var filmDescription = Description.Create(request.FullName.Description);
         
         if (filmDescription.IsFailure)
         {
-            return Result.Failure<Guid>("Film Description is invalid!");
+            return Errors.General.ValueIsInvalid("Description");
         }
 
         var film = Film.Create(
@@ -65,7 +66,7 @@ public class AddFilmHandler(IFilmsRepository filmsRepository)
 
         if (film.IsFailure)
         {
-            return Result.Failure<Guid>("Error creating film!");
+            return Errors.General.ValueIsInvalid("Film");
         }
 
         var creatingFilmHandler = await filmsRepository.Create(
@@ -74,7 +75,7 @@ public class AddFilmHandler(IFilmsRepository filmsRepository)
 
         if (creatingFilmHandler.IsFailure)
         {
-            return Result.Failure<Guid>("Error creating film!");
+            return Errors.General.ValueIsInvalid("Film");
         }
 
         return creatingFilmHandler.Value;
