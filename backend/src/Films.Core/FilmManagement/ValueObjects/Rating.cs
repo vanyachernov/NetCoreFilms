@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using Films.Core.Shared;
 
 namespace Films.Core.FilmManagement.ValueObjects;
 
@@ -8,11 +9,11 @@ public record Rating
     
     public int Value { get; } = default!;
 
-    public static Result<Rating> Create(int rating)
+    public static Result<Rating, Error> Create(int rating)
     {
-        if (rating < 0 || rating > 10)
+        if (rating < 1 || rating > 10)
         {
-            return Result.Failure<Rating>("Rating is invalid!");
+            return Errors.General.ValueIsInvalid("Rating is invalid!");
         }
 
         return new Rating(rating);

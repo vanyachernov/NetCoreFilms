@@ -15,14 +15,14 @@ public class DeleteFilmHandler(IFilmsRepository filmsRepository)
 
         if (filmExistsResult.IsFailure)
         {
-            Errors.General.ValueIsInvalid("Film Identifier");
+            return Errors.General.ValueIsInvalid("Film Identifier");
         }
 
         var filmExists = filmExistsResult.Value;
 
         if (!filmExists)
         {
-            Errors.General.NotFound(filmId);
+            return Errors.General.NotFound(filmId);
         }
 
         var deleteFilmResult = await filmsRepository.Delete(
@@ -31,7 +31,7 @@ public class DeleteFilmHandler(IFilmsRepository filmsRepository)
 
         if (deleteFilmResult.IsFailure)
         {
-            Errors.General.ValueIsInvalid("Delete film");
+            return Errors.General.ValueIsInvalid("Delete film");
         }
 
         return deleteFilmResult.Value;
