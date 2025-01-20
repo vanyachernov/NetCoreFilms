@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using Films.Core.Shared;
 
 namespace Films.Core.FilmManagement.ValueObjects;
 
@@ -8,11 +9,11 @@ public record Title
     
     public string Value { get; } = default!;
 
-    public static Result<Title> Create(string title)
+    public static Result<Title, Error> Create(string title)
     {
         if (string.IsNullOrWhiteSpace(title))
         {
-            return Result.Failure<Title>("Title is empty or invalid!");
+            return Errors.General.ValueIsInvalid("Title is empty or invalid!");
         }
 
         return new Title(title);

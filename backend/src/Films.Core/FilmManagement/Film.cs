@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using Films.Core.FilmManagement.ValueObjects;
+using Films.Core.Shared;
 using Films.Core.Shared.IDs;
 
 namespace Films.Core.FilmManagement;
@@ -19,7 +20,15 @@ public class Film : Shared.Entity<FilmId>
         Director director,
         ReleaseYear releaseYear,
         Rating rating,
-        Description description) : base(id) { }
+        Description description) : base(id)
+    {
+        Title = title;
+        Genre = genre;
+        Director = director;
+        ReleaseYear = releaseYear;
+        Rating = rating;
+        Description = description;
+    }
 
     public Title Title { get; private set; } = default!;
     public Genre Genre { get; private set; } = default!;
@@ -28,7 +37,7 @@ public class Film : Shared.Entity<FilmId>
     public Rating Rating { get; private set; } = default!;
     public Description Description { get; private set; } = default!;
     
-    public static Result<Film> Create(
+    public static Result<Film, Error> Create(
         FilmId id, 
         Title title,
         Genre genre,
