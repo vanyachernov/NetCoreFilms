@@ -3,6 +3,9 @@ using Films.Core.Shared;
 
 namespace Films.Core.FilmManagement.ValueObjects;
 
+/// <summary>
+/// Represents a title value-object.
+/// </summary>
 public record Title
 {
     private Title(string value) => Value = value;

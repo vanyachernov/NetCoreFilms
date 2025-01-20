@@ -3,6 +3,9 @@ using Films.Core.Shared;
 
 namespace Films.Core.FilmManagement.ValueObjects;
 
+/// <summary>
+/// Represents a genre value-object.
+/// </summary>
 public record Genre
 {
     private Genre(string value) => Value = value;
