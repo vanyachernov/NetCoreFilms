@@ -30,6 +30,18 @@ public static class Inject
                 .UseNpgsql(connectionString)
                 .UseSnakeCaseNamingConvention();
         });
+        
+        var frontEndAudience = Environment.GetEnvironmentVariable("BASE_FRONTEND_URL");
+        
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins(frontEndAudience!);
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+            });
+        });
 
         return services;
     }
