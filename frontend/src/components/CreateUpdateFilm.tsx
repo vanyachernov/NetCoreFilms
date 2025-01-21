@@ -9,9 +9,10 @@ import {
     DialogTitle
 } from "@/components/ui/dialog"
 import { Field } from "@/components/ui/field"
-import {useEffect, useRef, useState} from "react"
+import {useEffect, useRef} from "react"
 import {Button, Input, Stack} from "@chakra-ui/react";
 import * as yup from "yup";
+import {ErrorMessage, Field as FormikField, Form, Formik} from "formik";
 
 interface Props {
     mode: Mode;
@@ -37,52 +38,69 @@ const CreateUpdateFilm = ({
     } : Props) => {
     
     const ref = useRef<HTMLInputElement>(null);
-    const [title, setTitle] = useState<string>("");
-    const [description, setDescription] = useState<string>("");
-    const [genre, setGenre] = useState<string>("");
-    const [director, setDirector] = useState<string>("");
-    const [releaseYear, setReleaseYear] = useState<number>(2000);
-    const [rating, setRating] = useState<number>(1);
-    const [errors, setErrors] = useState<Record<string, string>>({});
+
+    const validationSchema = yup.object().shape({
+        title: yup.string().required("Title is required"),
+        description: yup.string().required("Description is required"),
+        genre: yup.string().required("Genre is required"),
+        director: yup.string().required("Director is required"),
+        releaseYear: yup
+            .number()
+            .required("Release Year is required")
+            .min(1888, "Year must be at least 1888")
+            .max(new Date().getFullYear(), "Year cannot be in the future"),
+        rating: yup
+            .number()
+            .required("Rating is required")
+            .min(1, "Rating must be at least 1")
+            .max(10, "Rating must be no more than 10"),
+    });
+    
+    const initialValues = {
+        title: "",
+        description: "",
+        genre: "",
+        director: "",
+        releaseYear: 2000,
+        rating: 1,
+    };
     
     useEffect(() => {
         if (mode === Mode.Edit && values.length > 0) {
             const [film] = values;
-            
-            setTitle(film.fullName.name);
-            setDescription(film.fullName.description);
-            setGenre(film.genre.title);
-            setDirector(film.director.fullName);
-            setReleaseYear(film.release.year);
-            setRating(film.rating.points);
+
+            initialValues.title = film.fullName.name;
+            initialValues.description = film.fullName.description;
+            initialValues.genre = film.genre.title;
+            initialValues.director = film.director.fullName;
+            initialValues.releaseYear = film.release.year;
+            initialValues.rating = film.rating.points;
         }
     }, [mode, values]);
     
-    const handleSave = async () => {
+    const handleSave = async (formValues: typeof initialValues) => {
         const filmRequest: FilmRequest = {
             fullName: {
-                name: title,
-                description: description,
+                name: formValues.title,
+                description: formValues.description,
             },
             genre: {
-                title: genre,
+                title: formValues.genre,
             },
             director: {
-                fullName: director,
+                fullName: formValues.director,
             },
             release: {
-                year: releaseYear,
+                year: formValues.releaseYear,
             },
             rating: {
-                points: rating,
+                points: formValues.rating,
             },
         };
 
         if (mode === Mode.Create) {
-            console.log("Test");
             handleCreate(filmRequest);
         } else if (mode === Mode.Edit && values.length > 0) {
-            console.log("Updated");
             handleUpdate(values[0].id, filmRequest);
         }
     };
@@ -101,70 +119,87 @@ const CreateUpdateFilm = ({
                             : "Edit Film"}
                     </DialogTitle>
                 </DialogHeader>
-                <DialogBody pb="4">
-                    <Stack gap="4">
-                        <Field label="Title">
-                            <Input
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Enter film title"
-                            />
-                        </Field>
-                        <Field label="Description">
-                            <Input
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Enter film description"
-                            />
-                        </Field>
-                        <Field label="Genre">
-                            <Input
-                                value={genre}
-                                onChange={(e) => setGenre(e.target.value)}
-                                placeholder="Enter film genre"
-                            />
-                        </Field>
-                        <Field label="Director">
-                            <Input
-                                value={director}
-                                onChange={(e) => setDirector(e.target.value)}
-                                placeholder="Enter director name"
-                            />
-                        </Field>
-                        <Field label="Release Year">
-                            <Input
-                                type="number"
-                                value={releaseYear.toString()}
-                                onChange={(e) => setReleaseYear(Number(e.target.value))}
-                                placeholder="Enter release year"
-                            />
-                        </Field>
-                        <Field label="Rating">
-                            <Input
-                                type="number"
-                                value={rating.toString()}
-                                onChange={(e) => setRating(Number(e.target.value))}
-                                placeholder="Enter film rating (1-10)"
-                            />
-                        </Field>
-                    </Stack>
+                <DialogBody>
+                    <Formik
+                        initialValues={initialValues}
+                        validationSchema={validationSchema}
+                        onSubmit={handleSave}
+                        enableReinitialize>
+                        {({ handleSubmit, isValid, dirty }) => (
+                            <Form onSubmit={handleSubmit}>
+                                <Stack gap="4">
+                                    <Field label="Title">
+                                        <FormikField
+                                            as={Input}
+                                            name="title"
+                                            placeholder="Enter film title"
+                                        />
+                                        <ErrorMessage name="title" component="div" />
+                                    </Field>
+                                    <Field label="Description">
+                                        <FormikField
+                                            as={Input}
+                                            name="description"
+                                            placeholder="Enter film description"
+                                        />
+                                        <ErrorMessage name="description" component="div" />
+                                    </Field>
+                                    <Field label="Genre">
+                                        <FormikField
+                                            as={Input}
+                                            name="genre"
+                                            placeholder="Enter film genre"
+                                        />
+                                        <ErrorMessage name="genre" component="div" />
+                                    </Field>
+                                    <Field label="Director">
+                                        <FormikField
+                                            as={Input}
+                                            name="director"
+                                            placeholder="Enter director name"
+                                        />
+                                        <ErrorMessage name="director" component="div" />
+                                    </Field>
+                                    <Field label="Release Year">
+                                        <FormikField
+                                            as={Input}
+                                            name="releaseYear"
+                                            type="number"
+                                            placeholder="Enter release year"
+                                        />
+                                        <ErrorMessage name="releaseYear" component="div" />
+                                    </Field>
+                                    <Field label="Rating">
+                                        <FormikField
+                                            as={Input}
+                                            name="rating"
+                                            type="number"
+                                            placeholder="Enter film rating (1-10)"
+                                        />
+                                        <ErrorMessage name="rating" component="div" />
+                                    </Field>
+                                </Stack>
+                                <DialogFooter gap={5}>
+                                    <DialogActionTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            onClick={handleCancel}>
+                                            Cancel
+                                        </Button>
+                                    </DialogActionTrigger>
+                                    <Button
+                                        bgColor="teal"
+                                        padding={5}
+                                        color="white"
+                                        type="submit"
+                                        disabled={!isValid || !dirty}>
+                                        Save
+                                    </Button>
+                                </DialogFooter>
+                            </Form>
+                        )}
+                    </Formik>
                 </DialogBody>
-                <DialogFooter gap={5}>
-                    <DialogActionTrigger asChild>
-                        <Button 
-                            variant="outline" 
-                            onClick={handleCancel}>
-                            Cancel
-                        </Button>
-                    </DialogActionTrigger>
-                    <Button 
-                        bgColor="teal"
-                        padding={5}
-                        color="white"
-                        onClick={handleSave}>
-                        Save
-                    </Button>
-                </DialogFooter>
             </DialogContent>
         </DialogRoot>
     );
