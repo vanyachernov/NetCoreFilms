@@ -6,6 +6,9 @@ using Moq;
 
 namespace Films.Tests.ApplicationTests.FilmTests;
 
+/// <summary>
+/// Represents a tests for AddFilmHandler
+/// </summary>
 public class AddFilmTests
 {
     private readonly Mock<IFilmsRepository> _filmsRepositoryMock = new();
