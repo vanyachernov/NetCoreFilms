@@ -8,8 +8,14 @@ A test project that uses **ASP.NET Core Web API** as backend and **React** as fr
 
 - [Films Management](#films-management)
   - [Table of Contents](#table-of-contents)
+<<<<<<< HEAD
   - [Overview](#overview)
     - [Example User Flow](#example-user-flow)
+=======
+  - [Technologies](#technologies)
+    - [Backend](#backend)
+    - [Frontend](#frontend)
+>>>>>>> 27d5779 (Update README.md)
   - [Requirements](#requirements)
   - [Setup](#setup)
     - [Clone the repository](#clone-the-repository)
@@ -20,9 +26,10 @@ A test project that uses **ASP.NET Core Web API** as backend and **React** as fr
     - [Running the backend (ASP.NET Core Web API)](#running-the-backend-aspnet-core-web-api)
     - [Running the frontend (React)](#running-the-frontend-react)
   - [Project structure](#project-structure)
-    - [backend/:](#backend)
-    - [frontend/:](#frontend)
+    - [backend/:](#backend-1)
+    - [frontend/:](#frontend-1)
 
+<<<<<<< HEAD
 ## Overview
 
 When you open the app, the homepage displays a list of films with the following features:
@@ -68,6 +75,29 @@ When you open the app, the homepage displays a list of films with the following 
 >5. **Deleting a Film**:
 
 ![Delete an exists film](Docs/deleteFilm.png)
+=======
+## Technologies
+
+### Backend
+
+- ASP.NET Core Web API
+- Swagger
+- EF Core
+- PostgreSQL
+- Domain-Driven Design (DDD)
+- Clean Architecture
+- xUnit
+- Moq
+
+### Frontend
+
+- React
+- TypeScript
+- Axios
+- Chakra UI
+- Yup
+- Formik
+>>>>>>> 27d5779 (Update README.md)
 
 ## Requirements
 
@@ -78,8 +108,6 @@ Make sure the following tools are installed on your machine:
 - [Visual Studio](https://visualstudio.microsoft.com/) (with **ASP.NET and web development** installed)
 - [PostgreSQL](https://www.postgresql.org/) (v12 or later)
 - [Git](https://git-scm.com/)
-
-
 
 ## Setup
 
