@@ -8,6 +8,8 @@ A test project that uses **ASP.NET Core Web API** as backend and **React** as fr
 
 - [Films Management](#films-management)
   - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+    - [Example User Flow](#example-user-flow)
   - [Requirements](#requirements)
   - [Setup](#setup)
     - [Clone the repository](#clone-the-repository)
@@ -21,6 +23,51 @@ A test project that uses **ASP.NET Core Web API** as backend and **React** as fr
     - [backend/:](#backend)
     - [frontend/:](#frontend)
 
+## Overview
+
+When you open the app, the homepage displays a list of films with the following features:
+
+1. **Film List**:
+   - The homepage shows a list of movies;
+   - Users can scroll through the list to explore available movies.
+
+2. **Film Actions**:
+   - Each movie has options to:
+     - **Edit**: Opens a form where you can modify the film's details, such as the title, description, genre, etc;
+     - **Delete**: Permanently removes the film from the collection.
+
+3. **Adding a New Film**:
+   - The top navigation bar contains a button labeled **"New Film"**.
+   - Clicking the "New Film" button opens a form where users can add a new movie to the collection by providing:
+     - Title
+     - Description
+     - Genre
+     - Director
+     - Release Year
+     - Rating
+
+### Example User Flow
+---
+
+>1. **Swagger**:
+
+![Swagger](Docs/swagger.png)
+
+>2. **Homepage**:
+
+  ![Homepage Screenshot](Docs/homepage.png)
+
+>3. **Adding a Film**:
+
+![Add a new film](Docs/addFilm.png)
+
+>4. **Editing a Film**:
+
+![Edit an exists film](Docs/updateFilm.png)
+
+>5. **Deleting a Film**:
+
+![Delete an exists film](Docs/deleteFilm.png)
 
 ## Requirements
 
