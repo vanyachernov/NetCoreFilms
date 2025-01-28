@@ -1,6 +1,7 @@
 using Films.Application.DTOs;
 using Films.Application.FilmDir;
 using Films.Application.FilmDir.GetFilms;
+using Films.Application.Helpers;
 using Films.Core.FilmManagement;
 using Films.Core.FilmManagement.ValueObjects;
 using Films.Core.Shared;
@@ -72,14 +73,18 @@ public class GetFilmsTests
             Release = new ReleaseYearDto(film.ReleaseYear.Value)
         });
 
+        var query = new QueryObject();
+
         _filmsRepositoryMock
-            .Setup(repo => repo.Get(It.IsAny<CancellationToken>()))
+            .Setup(repo => repo.Get(
+                query, 
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(filmsResponse.ToList());
 
         var handler = new GetFilmsHandler(_filmsRepositoryMock.Object);
 
         // Act
-        var result = await handler.Handle();
+        var result = await handler.Handle(query);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -89,6 +94,7 @@ public class GetFilmsTests
         Assert.Equal("Inception", result.Value.Films.ToList()[1].FullName.Name);
         
         _filmsRepositoryMock.Verify(repo => repo.Get(
+            query,
             It.IsAny<CancellationToken>()), 
             Times.Once);
     }
@@ -99,21 +105,26 @@ public class GetFilmsTests
         // Arrange
         var error = Errors.General.ValueIsInvalid("Films");
 
+        var query = new QueryObject();
+        
         _filmsRepositoryMock
-            .Setup(repo => repo.Get(It.IsAny<CancellationToken>()))
+            .Setup(repo => repo.Get(
+                query,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(error);
 
         var handler = new GetFilmsHandler(_filmsRepositoryMock.Object);
 
         // Act
-        var result = await handler.Handle();
+        var result = await handler.Handle(query);
 
         // Assert
         Assert.True(result.IsFailure);
         Assert.Equal("Films is invalid", result.Error.Message);
         
         _filmsRepositoryMock.Verify(repo => repo.Get(
-            It.IsAny<CancellationToken>()), 
+            query,
+                It.IsAny<CancellationToken>()), 
             Times.Once);
     }
 }

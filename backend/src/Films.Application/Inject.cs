@@ -3,6 +3,7 @@ using Films.Application.FilmDir.DeleteFilm;
 using Films.Application.FilmDir.GetFilm;
 using Films.Application.FilmDir.GetFilms;
 using Films.Application.FilmDir.UpdateFilm;
+using Films.Application.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Films.Application;
@@ -20,6 +21,8 @@ public static class Inject
         services.AddScoped<UpdateFilmHandler>();
         
         services.AddScoped<DeleteFilmHandler>();
+        
+        services.AddScoped<QueryObject>();
         
         return services;
     }

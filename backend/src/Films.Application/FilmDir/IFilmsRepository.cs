@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using Films.Application.FilmDir.GetFilms;
+using Films.Application.Helpers;
 using Films.Core.FilmManagement;
 using Films.Core.Shared;
 
@@ -16,6 +17,7 @@ public interface IFilmsRepository
     /// <param name="cancellationToken">Cancellation Token.</param>
     /// <returns>A <see cref="Task{IEnumerable{GetFilmsReponse}}"/>.</returns>
     Task<Result<IEnumerable<GetFilmsResponse>, Error>> Get(
+        QueryObject query,
         CancellationToken cancellationToken = default);
 
     /// <summary>

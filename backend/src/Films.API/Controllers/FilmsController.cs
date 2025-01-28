@@ -5,6 +5,7 @@ using Films.Application.FilmDir.DeleteFilm;
 using Films.Application.FilmDir.GetFilm;
 using Films.Application.FilmDir.GetFilms;
 using Films.Application.FilmDir.UpdateFilm;
+using Films.Application.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -26,10 +27,13 @@ public class FilmsController : ApplicationController
         StatusCodes.Status500InternalServerError, 
         "Server Internal server error.")]
     public async Task<ActionResult<GetFilmsWrapperResponse>> Get(
+        [FromQuery] QueryObject query,
         [FromServices] GetFilmsHandler handler,
         CancellationToken cancellationToken = default)
     {
-        var filmsResult = await handler.Handle(cancellationToken);
+        var filmsResult = await handler.Handle(
+            query,
+            cancellationToken);
 
         return Ok(filmsResult.Value);
     }
