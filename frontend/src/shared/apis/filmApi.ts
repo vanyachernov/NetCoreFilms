@@ -82,6 +82,25 @@ export const GetFilms = async (): Promise<{ films: Film[] }> => {
     }
 };
 
+export const GetFilteredFilms = async (
+    title: string, 
+    director: string, 
+    isRatingDescending: boolean): Promise<{ films: Film[] }> => {
+    try {
+        title.toLowerCase();
+        director.toLowerCase();
+        
+        const response = await axios.get(urls.FILMS.GET, {
+            params: { title, director, isRatingDescending }
+        });
+
+        return response.data.result;
+    } catch (error) {
+        console.error("Error fetching films!", error);
+        return { films: [] };
+    }
+};
+
 export const AddFilm = async (filmRequest: FilmRequest) => {
     try {
         await axios.post(urls.FILMS.CREATE, filmRequest);

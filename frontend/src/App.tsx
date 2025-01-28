@@ -2,14 +2,17 @@ import { Box } from "@chakra-ui/react";
 import Header from "@/components/Header.tsx";
 import FilmsTable from "@/components/FilmsTable.tsx";
 import { useEffect, useState } from "react";
-import {AddFilm, DeleteFilm, Film, FilmRequest, GetFilms, UpdateFilm} from "@/shared/apis/filmApi.ts";
+import {AddFilm, DeleteFilm, Film, FilmRequest, GetFilms, GetFilteredFilms, UpdateFilm} from "@/shared/apis/filmApi.ts";
 import { Spinner } from "@chakra-ui/react"
 import CreateUpdateFilm, {Mode} from "@/components/CreateUpdateFilm.tsx";
 import DeleteFilmAlert from "@/components/DeleteFilmAlert.tsx";
 import "./App.css"
+import SearchField from "@/components/SearchField.tsx";
 
 function App() {
     const [films, setFilms] = useState<Film[]>([]);
+    const [filteredFilms, setFilteredFilms] = useState<Film[]>([]);
+    
     const [loading, setLoading] = useState<boolean>(true);
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -18,17 +21,39 @@ function App() {
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
     const [filmToDelete, setFilmToDelete] = useState<string | null>(null);
-    
+
+    const [titleQuery, setTitleQuery] = useState<string>("");
+    const [directorQuery, setDirectorQuery] = useState<string>("");
+    const [isRatingDescending, setIsRatingDescending] = useState<boolean>(false);
+
     useEffect(() => {
         const fetchFilms = async () => {
+            setLoading(true);
             const filmsData = await GetFilms();
-            
             setFilms(filmsData.films);
+            setFilteredFilms(filmsData.films);
             setLoading(false);
         };
-        
+
         fetchFilms();
     }, []);
+    
+    useEffect(() => {
+        const fetchFilteredFilms = async () => {
+            setLoading(true);
+            
+            const filmsData = await GetFilteredFilms(titleQuery, directorQuery, isRatingDescending);
+            setFilteredFilms(filmsData.films);
+            
+            setLoading(false);
+        };
+
+        if (titleQuery || directorQuery || isRatingDescending !== undefined) {
+            fetchFilteredFilms();
+        } else {
+            setFilteredFilms(films);
+        }
+    }, [titleQuery, directorQuery, isRatingDescending, films]);
 
     const openModal = (mode: Mode, film: Film | null = null) => {
         setModalMode(mode);
@@ -56,6 +81,7 @@ function App() {
         
         const filmsData = await GetFilms();
         setFilms(filmsData.films);
+        setFilteredFilms(filmsData.films);
         
         closeModal();
     };
@@ -65,14 +91,17 @@ function App() {
 
         const filmsData = await GetFilms();
         setFilms(filmsData.films);
+        setFilteredFilms(filmsData.films);
         
         closeModal();
     };
 
     const handleDelete = async (filmId: string) => {
         await DeleteFilm(filmId);
-        
-        setFilms(films.filter((film) => film.id !== filmId));
+
+        const updatedFilms = films.filter((film) => film.id !== filmId);
+        setFilms(updatedFilms);
+        setFilteredFilms(updatedFilms);
         
         closeDeleteModal();
     };
@@ -80,6 +109,19 @@ function App() {
     return (
         <Box className="bg-white text-black min-h-screen">
             <Header onNewFilm={() => openModal(Mode.Create)} />
+            <Box 
+                width="100%"
+                height="10%"
+                display="flex"
+                bgColor="#F5F5F5">
+                <Box
+                    padding={5}>
+                    <SearchField 
+                        onTitleSearch={setTitleQuery} 
+                        onDirectorSearch={setDirectorQuery}
+                        isRatingDescending={setIsRatingDescending} />
+                </Box>
+            </Box>
             <Box
                 width="100%"
                 height="80vh"
@@ -92,7 +134,7 @@ function App() {
                         loading 
                             ? <Spinner size="xl" color="teal.500" /> 
                             : <FilmsTable 
-                                films={films} 
+                                films={filteredFilms} 
                                 onEdit={(film) => openModal(Mode.Edit, film)}
                                 onDelete={(filmId) => openDeleteModal(filmId)} />
                     }

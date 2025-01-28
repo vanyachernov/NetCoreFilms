@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using Films.Application.DTOs;
+using Films.Application.Helpers;
 using Films.Core.Shared;
 
 namespace Films.Application.FilmDir.GetFilms;
@@ -7,9 +8,12 @@ namespace Films.Application.FilmDir.GetFilms;
 public class GetFilmsHandler(IFilmsRepository filmsRepository)
 {
     public async Task<Result<GetFilmsWrapperResponse, Error>> Handle(
+        QueryObject query,
         CancellationToken cancellationToken = default)
     {
-        var filmsResult = await filmsRepository.Get(cancellationToken);
+        var filmsResult = await filmsRepository.Get(
+            query,
+            cancellationToken);
 
         if (filmsResult.IsFailure)
         {

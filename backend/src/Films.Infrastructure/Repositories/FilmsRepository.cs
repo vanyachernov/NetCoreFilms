@@ -2,6 +2,7 @@ using CSharpFunctionalExtensions;
 using Films.Application.DTOs;
 using Films.Application.FilmDir;
 using Films.Application.FilmDir.GetFilms;
+using Films.Application.Helpers;
 using Films.Core.FilmManagement;
 using Films.Core.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -11,11 +12,35 @@ namespace Films.Infrastructure.Repositories;
 public class FilmsRepository(FilmDbContext context) : IFilmsRepository
 {
     public async Task<Result<IEnumerable<GetFilmsResponse>, Error>> Get(
+        QueryObject query,
         CancellationToken cancellationToken = default)
     {
-        var films = await context.Films
+        var films = context.Films
             .AsNoTracking()
-            .ToListAsync(cancellationToken);
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(query.Director))
+        {
+            var directorFilter = query.Director.ToLower();
+            
+            films = films.Where(f => f.Director.Value
+                .ToLower()
+                .Contains(directorFilter));
+        }
+        
+        if (!string.IsNullOrWhiteSpace(query.Title))
+        {
+            var titleFilter = query.Title.ToLower();
+            
+            films = films
+                .Where(f => f.Title.Value
+                    .ToLower()
+                    .Contains(titleFilter));
+        }
+
+        films = query.IsRatingDescending
+            ? films.OrderByDescending(f => f.Rating.Value)
+            : films.OrderBy(f => f.Rating.Value);
         
         var response = films.Select(film => new GetFilmsResponse
         {
@@ -30,7 +55,12 @@ public class FilmsRepository(FilmDbContext context) : IFilmsRepository
             Release = new ReleaseYearDto(film.ReleaseYear.Value)
         });
 
-        return response.ToList();
+        var paginationResult = (query.PageNumber - 1) * query.PageSize;
+        
+        return await response
+            .Skip(paginationResult)
+            .Take(query.PageSize)
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<Result<GetFilmsResponse, Error>> GetById(
