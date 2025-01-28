@@ -15,9 +15,25 @@ public class FilmsRepository(FilmDbContext context) : IFilmsRepository
         QueryObject query,
         CancellationToken cancellationToken = default)
     {
-        var films = await context.Films
+        var films = context.Films
             .AsNoTracking()
-            .ToListAsync(cancellationToken);
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(query.Director))
+        {
+            films = films
+                .Where(f => f.Director.Value
+                    .ToLower()
+                    .Contains(query.Director));
+        }
+        
+        if (!string.IsNullOrWhiteSpace(query.Symbol))
+        {
+            films = films
+                .Where(f => f.Title.Value
+                    .ToLower()
+                    .Contains(query.Symbol));
+        }
         
         var response = films.Select(film => new GetFilmsResponse
         {
