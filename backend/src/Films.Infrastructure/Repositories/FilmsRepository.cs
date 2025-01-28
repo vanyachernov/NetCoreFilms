@@ -21,19 +21,26 @@ public class FilmsRepository(FilmDbContext context) : IFilmsRepository
 
         if (!string.IsNullOrWhiteSpace(query.Director))
         {
-            films = films
-                .Where(f => f.Director.Value
-                    .ToLower()
-                    .Contains(query.Director));
+            var directorFilter = query.Director.ToLower();
+            
+            films = films.Where(f => f.Director.Value
+                .ToLower()
+                .Contains(directorFilter));
         }
         
         if (!string.IsNullOrWhiteSpace(query.Title))
         {
+            var titleFilter = query.Title.ToLower();
+            
             films = films
                 .Where(f => f.Title.Value
                     .ToLower()
-                    .Contains(query.Title));
+                    .Contains(titleFilter));
         }
+
+        films = query.IsRatingDescending
+            ? films.OrderByDescending(f => f.Rating.Value)
+            : films.OrderBy(f => f.Rating.Value);
         
         var response = films.Select(film => new GetFilmsResponse
         {
