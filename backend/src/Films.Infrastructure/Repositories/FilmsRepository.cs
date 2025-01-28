@@ -27,12 +27,12 @@ public class FilmsRepository(FilmDbContext context) : IFilmsRepository
                     .Contains(query.Director));
         }
         
-        if (!string.IsNullOrWhiteSpace(query.Symbol))
+        if (!string.IsNullOrWhiteSpace(query.Title))
         {
             films = films
                 .Where(f => f.Title.Value
                     .ToLower()
-                    .Contains(query.Symbol));
+                    .Contains(query.Title));
         }
         
         var response = films.Select(film => new GetFilmsResponse
@@ -49,11 +49,11 @@ public class FilmsRepository(FilmDbContext context) : IFilmsRepository
         });
 
         var paginationResult = (query.PageNumber - 1) * query.PageSize;
-
-        return response
+        
+        return await response
             .Skip(paginationResult)
             .Take(query.PageSize)
-            .ToList();
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<Result<GetFilmsResponse, Error>> GetById(
